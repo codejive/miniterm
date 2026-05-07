@@ -1,7 +1,3 @@
-/*
- * Copyright TamboUI Contributors
- * SPDX-License-Identifier: MIT
- */
 package org.codejive.miniterm.windows;
 
 import java.io.IOException;

@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.codejive.miniterm</groupId>
+        <artifactId>miniterm-parent</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>miniterm</artifactId>
+    <name>miniterm</name>
+    <description>A minimal terminal library - legacy (Java 8+) implementations</description>
+
+    <properties>
+        <maven.compiler.release>8</maven.compiler.release>
+        <javaModuleName>org.codejive.miniterm</javaModuleName>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.jspecify</groupId>
+            <artifactId>jspecify</artifactId>
+            <version>${version.jspecify}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <version>${version.assertj}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <release>8</release>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifestEntries>
+                            <Automatic-Module-Name>${javaModuleName}</Automatic-Module-Name>
+                        </manifestEntries>
+                        <addMavenDescriptor>false</addMavenDescriptor>
+                        <index>false</index>
+                    </archive>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.diffplug.spotless</groupId>
+                <artifactId>spotless-maven-plugin</artifactId>
+                <configuration>
+                    <formats>
+                        <format>
+                            <includes>
+                                <include>**/*.md</include>
+                                <include>**/*.txt</include>
+                                <include>.gitignore</include>
+                                <include>.gitattributes</include>
+                            </includes>
+                            <excludes>
+                                <exclude>**/target/**</exclude>
+                            </excludes>
+                            <lineEndings>UNIX</lineEndings>
+                            <trimTrailingWhitespace />
+                            <endWithNewline />
+                            <indent>
+                                <spaces>true</spaces>
+                                <spacesPerTab>4</spacesPerTab>
+                            </indent>
+                        </format>
+                    </formats>
+                    <java>
+                        <includes>
+                            <include>src/main/java/**/*.java</include>
+                            <include>src/test/java/**/*.java</include>
+                        </includes>
+                        <googleJavaFormat>
+                            <version>${version.google-java-format}</version>
+                            <style>AOSP</style>
+                        </googleJavaFormat>
+                        <toggleOffOn />
+                    </java>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <profiles>
+        <!--
+            Compile miniterm-console.dll on Windows.
+            Tries MSVC (cl) first; falls back to gcc (MinGW / MSYS2).
+            Activated automatically on any Windows OS.
+        -->
+        <profile>
+            <id>native-windows</id>
+            <activation>
+                <os><family>windows</family></os>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <version>3.1.0</version>
+                        <executions>
+                            <execution>
+                                <id>compile-native-dll</id>
+                                <phase>process-classes</phase>
+                                <goals><goal>run</goal></goals>
+                                <configuration>
+                                    <target xmlns:if="ant:if">
+                                        <mkdir dir="${project.build.outputDirectory}/native/windows-x86_64"/>
+                                        <!-- Try MSVC (cl.exe) first -->
+                                        <exec executable="cl"
+                                              dir="${project.build.directory}"
+                                              resultproperty="cl.result"
+                                              failonerror="false"
+                                              failifexecutionfails="false">
+                                            <arg value="/LD"/>
+                                            <arg value="/O2"/>
+                                            <arg value="/I${env.JAVA_HOME}\include"/>
+                                            <arg value="/I${env.JAVA_HOME}\include\win32"/>
+                                            <arg value="/Fe:${project.build.outputDirectory}\native\windows-x86_64\miniterm-console.dll"/>
+                                            <arg value="${project.basedir}\src\main\native\WinConsoleNative.c"/>
+                                            <arg value="kernel32.lib"/>
+                                            <arg value="/link"/>
+                                            <arg value="/DEBUG:NONE"/>
+                                        </exec>
+                                        <!-- Fall back to gcc (MinGW / MSYS2) if cl is not available -->
+                                        <condition property="cl.failed">
+                                            <not><equals arg1="${cl.result}" arg2="0"/></not>
+                                        </condition>
+                                        <exec executable="gcc"
+                                              dir="${project.build.directory}"
+                                              failonerror="false"
+                                              failifexecutionfails="false"
+                                              if:set="cl.failed">
+                                            <arg value="-shared"/>
+                                            <arg value="-O2"/>
+                                            <arg value="-s"/>
+                                            <arg value="-I${env.JAVA_HOME}\include"/>
+                                            <arg value="-I${env.JAVA_HOME}\include\win32"/>
+                                            <arg value="-o"/>
+                                            <arg value="${project.build.outputDirectory}\native\windows-x86_64\miniterm-console.dll"/>
+                                            <arg value="${project.basedir}\src\main\native\WinConsoleNative.c"/>
+                                            <arg value="-lkernel32"/>
+                                        </exec>
+                                    </target>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!--
+            Cross-compile miniterm-console.dll from Linux using MinGW-w64.
+            Activate with: mvn compile -Pcross-windows
+            Also copies the result back to src/main/resources so it can be committed.
+        -->
+        <profile>
+            <id>cross-windows</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <version>3.1.0</version>
+                        <executions>
+                            <execution>
+                                <id>cross-compile-native-dll</id>
+                                <phase>process-classes</phase>
+                                <goals><goal>run</goal></goals>
+                                <configuration>
+                                    <target>
+                                        <mkdir dir="${project.build.outputDirectory}/native/windows-x86_64"/>
+                                        <exec executable="x86_64-w64-mingw32-gcc"
+                                              dir="${project.basedir}/src/main/native"
+                                              failonerror="true">
+                                            <arg value="-shared"/>
+                                            <arg value="-O2"/>
+                                            <arg value="-I${env.JAVA_HOME}/include"/>
+                                            <arg value="-I${project.basedir}/src/main/native/win32"/>
+                                            <arg value="-o"/>
+                                            <arg value="${project.build.outputDirectory}/native/windows-x86_64/miniterm-console.dll"/>
+                                            <arg value="WinConsoleNative.c"/>
+                                            <arg value="-lkernel32"/>
+                                        </exec>
+                                        <!-- Copy back to src/main/resources so it can be committed -->
+                                        <mkdir dir="${project.basedir}/src/main/resources/native/windows-x86_64"/>
+                                        <copy file="${project.build.outputDirectory}/native/windows-x86_64/miniterm-console.dll"
+                                              todir="${project.basedir}/src/main/resources/native/windows-x86_64"
+                                              overwrite="true"/>
+                                    </target>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
+</project>

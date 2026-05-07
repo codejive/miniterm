@@ -112,21 +112,45 @@ public interface Terminal extends AutoCloseable {
     @Override
     void close() throws IOException;
 
+    /**
+     * Factory method to create a Terminal for the current platform.
+     *
+     * <p>Strategy:
+     *
+     * <ol>
+     *   <li>Detect OS (windows/unix)
+     *   <li>Use legacy implementations (Java 8+): LegacyWindowsTerminal or LegacyUnixTerminal
+     *   <li>Can be overridden via system properties:
+     *       <ul>
+     *         <li>{@code miniterm.terminal.type}: "windows" or "unix"
+     *         <li>{@code miniterm.terminal.class}: specific fully-qualified class name
+     *       </ul>
+     * </ol>
+     *
+     * <p>For FFM-based (Java 22+) implementations, use the {@code miniterm-ffm} artifact instead.
+     */
     public static Terminal create() throws IOException {
         String os = System.getProperty("os.name", "").toLowerCase();
         String ostype = os.contains("windows") ? "windows" : "unix";
         String term = System.getProperty("miniterm.terminal.type", ostype);
-        String className =
+        String[] classNames =
                 "windows".equals(term)
-                        ? "org.codejive.miniterm.windows.FfmWindowsTerminal"
-                        : "org.codejive.miniterm.unix.FfmUnixTerminal";
-        className = System.getProperty("miniterm.terminal.class", className);
-        try {
-            return (Terminal) Class.forName(className).getDeclaredConstructor().newInstance();
-        } catch (ReflectiveOperationException e) {
-            throw new IOException(
-                    "Failed to create terminal for platform: " + System.getProperty("os.name"), e);
+                        ? new String[] {"org.codejive.miniterm.windows.LegacyWindowsTerminal"}
+                        : new String[] {"org.codejive.miniterm.unix.LegacyUnixTerminal"};
+        String override = System.getProperty("miniterm.terminal.class");
+        if (override != null) {
+            classNames = new String[] {override};
         }
+        Throwable last = null;
+        for (String className : classNames) {
+            try {
+                return (Terminal) Class.forName(className).getDeclaredConstructor().newInstance();
+            } catch (ReflectiveOperationException | Error e) {
+                last = e;
+            }
+        }
+        throw new IOException(
+                "Failed to create terminal for platform: " + System.getProperty("os.name"), last);
     }
 
     public static class Size {
