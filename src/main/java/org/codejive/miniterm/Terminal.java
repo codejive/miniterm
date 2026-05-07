@@ -114,10 +114,13 @@ public interface Terminal extends AutoCloseable {
 
     public static Terminal create() throws IOException {
         String os = System.getProperty("os.name", "").toLowerCase();
+        String ostype = os.contains("windows") ? "windows" : "unix";
+        String term = System.getProperty("miniterm.terminal.type", ostype);
         String className =
-                os.contains("windows")
+                "windows".equals(term)
                         ? "org.codejive.miniterm.windows.FfmWindowsTerminal"
                         : "org.codejive.miniterm.unix.FfmUnixTerminal";
+        className = System.getProperty("miniterm.terminal.class", className);
         try {
             return (Terminal) Class.forName(className).getDeclaredConstructor().newInstance();
         } catch (ReflectiveOperationException e) {

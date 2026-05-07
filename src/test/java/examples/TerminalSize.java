@@ -1,5 +1,3 @@
-/// RUNTIME_OPTIONS --enable-native-access=ALL-UNNAMED
-
 package examples;
 
 import java.io.IOException;
