@@ -12,9 +12,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>21</maven.compiler.source>
-        <maven.compiler.target>21</maven.compiler.target>
-        <maven.compiler.release>21</maven.compiler.release>
+        <maven.compiler.release>8</maven.compiler.release>
 
         <!-- Dependency versions -->
         <version.jspecify>1.0.0</version.jspecify>
@@ -91,6 +89,38 @@
                     <artifactId>maven-jar-plugin</artifactId>
                     <version>3.5.0</version>
                 </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>build-helper-maven-plugin</artifactId>
+                    <version>3.6.0</version>
+                </plugin>
+                <!-- Tell m2e (VS Code Java) to ignore the build-helper execution
+                     that adds target/classes/META-INF/versions/22 as a test resource,
+                     which Eclipse JDT cannot handle (nested inside output folder). -->
+                <plugin>
+                    <groupId>org.eclipse.m2e</groupId>
+                    <artifactId>lifecycle-mapping</artifactId>
+                    <version>1.0.0</version>
+                    <configuration>
+                        <lifecycleMappingMetadata>
+                            <pluginExecutions>
+                                <pluginExecution>
+                                    <pluginExecutionFilter>
+                                        <groupId>org.codehaus.mojo</groupId>
+                                        <artifactId>build-helper-maven-plugin</artifactId>
+                                        <versionRange>[1.0,)</versionRange>
+                                        <goals>
+                                            <goal>add-test-resource</goal>
+                                        </goals>
+                                    </pluginExecutionFilter>
+                                    <action>
+                                        <ignore />
+                                    </action>
+                                </pluginExecution>
+                            </pluginExecutions>
+                        </lifecycleMappingMetadata>
+                    </configuration>
+                </plugin>
             </plugins>
         </pluginManagement>
 
@@ -107,10 +137,77 @@
                         <configuration>
                             <rules>
                                 <requireJavaVersion>
-                                    <version>[21,)</version>
-                                    <message>Java 21 or higher is required to build this project</message>
+                                    <version>[22,)</version>
+                                    <message>Java 22 or higher is required to build this project</message>
                                 </requireJavaVersion>
                             </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>default-compile</id>
+                        <configuration>
+                            <release>8</release>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>compile-java22</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                        <configuration>
+                            <release>22</release>
+                            <compileSourceRoots>
+                                <compileSourceRoot>${project.basedir}/src/main/java22</compileSourceRoot>
+                            </compileSourceRoots>
+                            <outputDirectory>${project.build.outputDirectory}</outputDirectory>
+                            <multiReleaseOutput>true</multiReleaseOutput>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>default-testCompile</id>
+                        <configuration>
+                            <release>22</release>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifestEntries>
+                            <Automatic-Module-Name>${javaModuleName}</Automatic-Module-Name>
+                            <Multi-Release>true</Multi-Release>
+                        </manifestEntries>
+                        <addMavenDescriptor>false</addMavenDescriptor>
+                        <index>false</index>
+                    </archive>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>add-java22-test-classpath</id>
+                        <phase>test-compile</phase>
+                        <goals>
+                            <goal>add-test-resource</goal>
+                        </goals>
+                        <configuration>
+                            <resources>
+                                <resource>
+                                    <directory>${project.build.outputDirectory}/META-INF/versions/22</directory>
+                                </resource>
+                            </resources>
                         </configuration>
                     </execution>
                 </executions>
@@ -130,6 +227,7 @@
                             <excludes>
                                 <exclude>**/target/**</exclude>
                             </excludes>
+                            <lineEndings>UNIX</lineEndings>
                             <trimTrailingWhitespace />
                             <endWithNewline />
                             <indent>
@@ -141,6 +239,7 @@
                     <java>
                         <includes>
                             <include>src/main/java/**/*.java</include>
+                            <include>src/main/java22/**/*.java</include>
                             <include>src/test/java/**/*.java</include>
                         </includes>
                         <googleJavaFormat>
