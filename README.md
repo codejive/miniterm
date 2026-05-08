@@ -1,10 +1,14 @@
 # java-miniterm
 
-miniterm is a Java library that provides low-level terminal access. Its main selling point is that it is extremely small (~25KB), making it ideal for CLI tools and applications where keeping dependencies lightweight matters.
+`miniterm` is a Java library that provides low-level terminal access. Its main selling point is that it is extremely small (**~25KB**), making it ideal for CLI tools and applications where keeping dependencies lightweight matters.
 
 Two variants are available:
 - **`miniterm`** — legacy implementation, works with Java 8+
 - **`miniterm-ffm`** — modern implementation using the Foreign Function & Memory API, requires Java 22+
+
+**Philosophy** : this project has been expressly created to be as minimal as possible, it only offers the most essential functionality that is missing from Java to be able to use the features of a modern Terminal. Several other projects exist that do this as well, but they normally come with a whole bunch of other things that you might not need. `miniterm` on the other hand *only* does the work that you can't do with standard Java APIs. Everything else can be built on top.
+
+**Acknowledgements** : `miniterm` is inspired by and has unashamedly copied ideas and code from [AEsh](https://github.com/aeshell/aesh-readline) and [Tamboui Panama backend](https://github.com/tamboui/tamboui/tree/main/tamboui-panama-backend).
 
 ## Usage
 
