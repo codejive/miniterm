@@ -1,0 +1,58 @@
+project:
+  name: miniterm
+  description: A minimal terminal library
+  longDescription: |
+    miniterm is a minimal terminal library for Java providing platform-specific
+    implementations for terminal manipulation. It includes a legacy Java 8+
+    implementation (miniterm) and a modern Java 22+ FFM-based implementation
+    (miniterm-ffm).
+  authors:
+    - Tako Schotanus
+  tags:
+    - java
+    - terminal
+    - library
+  license: Apache-2.0
+  links:
+    homepage: https://github.com/codejive/miniterm
+  languages:
+    java:
+      groupId: org.codejive.miniterm
+      version: '8'
+  inceptionYear: '2024'
+  stereotype: NONE
+
+# No assembly needed - Maven handles JARs
+assemble:
+  enabled: false
+
+# Maven Central deployment - all three staging repos (parent + two modules)
+deploy:
+  maven:
+    mavenCentral:
+      miniterm:
+        active: RELEASE
+        url: https://central.sonatype.com/api/v1/publisher
+        stagingRepositories:
+          - target/staging-deploy
+
+# GitHub release configuration
+release:
+  github:
+    owner: codejive
+    name: miniterm
+    overwrite: true
+    changelog:
+      formatted: ALWAYS
+      preset: conventional-commits
+      contributors:
+        format: '- {{contributorName}}{{#contributorUsernameAsLink}} ({{.}}){{/contributorUsernameAsLink}}'
+
+# Checksum generation
+checksum:
+  individual: true
+
+# GPG signing - required for Maven Central
+signing:
+  active: ALWAYS
+  armored: true

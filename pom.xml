@@ -6,10 +6,34 @@
 
     <groupId>org.codejive.miniterm</groupId>
     <artifactId>miniterm-parent</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>miniterm-parent</name>
     <description>A minimal terminal library (parent)</description>
+    <url>https://github.com/codejive/miniterm</url>
+
+    <licenses>
+        <license>
+            <name>Apache-2.0</name>
+            <url>https://www.apache.org/licenses/LICENSE-2.0</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <id>quintesse</id>
+            <name>Tako Schotanus</name>
+            <email>tako@codejive.org</email>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:https://github.com/codejive/miniterm.git</connection>
+        <developerConnection>scm:git:https://github.com/codejive/miniterm.git</developerConnection>
+        <url>https://github.com/codejive/miniterm</url>
+        <tag>HEAD</tag>
+    </scm>
 
     <modules>
         <module>miniterm</module>
@@ -30,6 +54,10 @@
         <version.spotless>3.4.0</version.spotless>
         <version.google-java-format>1.22.0</version.google-java-format>
         <version.maven-enforcer>3.6.2</version.maven-enforcer>
+        <version.maven-source>3.3.1</version.maven-source>
+        <version.maven-javadoc>3.11.2</version.maven-javadoc>
+        <version.build-helper>3.6.0</version.build-helper>
+        <version.jreleaser>1.24.0</version.jreleaser>
     </properties>
 
     <dependencyManagement>
@@ -72,9 +100,87 @@
                     <artifactId>maven-jar-plugin</artifactId>
                     <version>3.5.0</version>
                 </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <version>${version.maven-source}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>${version.maven-javadoc}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>build-helper-maven-plugin</artifactId>
+                    <version>${version.build-helper}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.jreleaser</groupId>
+                    <artifactId>jreleaser-maven-plugin</artifactId>
+                    <version>${version.jreleaser}</version>
+                </plugin>
             </plugins>
         </pluginManagement>
 
+        <plugins>
+            <plugin>
+                <groupId>org.jreleaser</groupId>
+                <artifactId>jreleaser-maven-plugin</artifactId>
+                <inherited>false</inherited>
+                <configuration>
+                    <configFile>${project.basedir}/jreleaser.yml</configFile>
+                </configuration>
+            </plugin>
+        </plugins>
     </build>
+
+    <distributionManagement>
+        <repository>
+            <id>jreleaser</id>
+            <url>https://central.sonatype.com/api/v1/publisher</url>
+        </repository>
+    </distributionManagement>
+
+    <profiles>
+        <profile>
+            <id>release</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <goals>
+                                    <goal>jar-no-fork</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-deploy-plugin</artifactId>
+                        <configuration>
+                            <altDeploymentRepository>local::file:${maven.multiModuleProjectDirectory}/target/staging-deploy</altDeploymentRepository>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
 </project>

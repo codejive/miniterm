@@ -7,12 +7,13 @@
     <parent>
         <groupId>org.codejive.miniterm</groupId>
         <artifactId>miniterm-parent</artifactId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>0.1.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>miniterm-ffm</artifactId>
     <name>miniterm-ffm</name>
     <description>A minimal terminal library - FFM (Java 22+) implementations</description>
+    <url>https://github.com/codejive/miniterm</url>
 
     <properties>
         <maven.compiler.release>22</maven.compiler.release>
