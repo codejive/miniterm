@@ -12,6 +12,7 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.VarHandle;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.function.Consumer;
 import org.codejive.miniterm.Terminal;
 
 /**
@@ -31,7 +32,7 @@ public final class FfmWindowsTerminal implements Terminal {
     private final int savedInputMode;
     private final int savedOutputMode;
     private boolean rawModeEnabled;
-    private volatile Runnable resizeHandler;
+    private volatile Consumer<Size> resizeHandler;
 
     /**
      * Creates a new Windows terminal instance.
@@ -187,7 +188,7 @@ public final class FfmWindowsTerminal implements Terminal {
         } else if (eventType == Kernel32.WINDOW_BUFFER_SIZE_EVENT) {
             var handler = resizeHandler;
             if (handler != null) {
-                handler.run();
+                handler.accept(getSize());
             }
         }
 
@@ -249,7 +250,7 @@ public final class FfmWindowsTerminal implements Terminal {
     }
 
     @Override
-    public void onResize(Runnable handler) {
+    public void onResize(Consumer<Size> handler) {
         this.resizeHandler = handler;
     }
 

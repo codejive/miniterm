@@ -16,6 +16,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.charset.UnsupportedCharsetException;
 import java.util.Locale;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.function.Consumer;
 import org.codejive.miniterm.Terminal;
 
 /**
@@ -71,7 +72,7 @@ public final class FfmUnixTerminal implements Terminal {
     private boolean rawModeEnabled;
     private int peekedChar = -2;
     private final ReentrantLock resizeLock = new ReentrantLock();
-    private Runnable resizeHandler;
+    private Consumer<Size> resizeHandler;
     private boolean resizePending;
     private MemorySegment previousSigaction; // Previous sigaction struct (for restoration)
     private Arena signalArena;
@@ -396,7 +397,7 @@ public final class FfmUnixTerminal implements Terminal {
      *
      * @param handler the handler to call on resize, or null to remove
      */
-    public void onResize(Runnable handler) {
+    public void onResize(Consumer<Size> handler) {
         resizeLock.lock();
         try {
             this.resizeHandler = handler;
@@ -455,8 +456,8 @@ public final class FfmUnixTerminal implements Terminal {
      *
      * <p>This should be called from the main event loop, not from signal context.
      */
-    private void checkResizePending() {
-        Runnable handler = null;
+    private void checkResizePending() throws IOException {
+        Consumer<Size> handler = null;
         resizeLock.lock();
         try {
             if (resizePending) {
@@ -468,7 +469,7 @@ public final class FfmUnixTerminal implements Terminal {
         }
         // Call handler outside of lock to avoid deadlock
         if (handler != null) {
-            handler.run();
+            handler.accept(getSize());
         }
     }
 

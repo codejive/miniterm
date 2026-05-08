@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 import org.codejive.miniterm.Terminal;
 
 /**
@@ -60,7 +61,7 @@ public final class LegacyUnixTerminal implements Terminal {
     private String savedSettings;
     private boolean rawModeEnabled;
     private volatile boolean closing;
-    private volatile Runnable resizeHandler;
+    private volatile Consumer<Size> resizeHandler;
     private int peekedByte = -2;
 
     /** Creates a new Unix terminal instance. */
@@ -214,7 +215,7 @@ public final class LegacyUnixTerminal implements Terminal {
     }
 
     @Override
-    public void onResize(Runnable handler) {
+    public void onResize(Consumer<Size> handler) {
         this.resizeHandler = handler;
     }
 
@@ -403,8 +404,13 @@ public final class LegacyUnixTerminal implements Terminal {
                                         java.lang.reflect.Method method,
                                         Object[] args) {
                                     if ("handle".equals(method.getName())) {
-                                        Runnable h = self.resizeHandler;
-                                        if (h != null) h.run();
+                                        Consumer<Size> h = self.resizeHandler;
+                                        if (h != null) {
+                                            try {
+                                                h.accept(self.getSize());
+                                            } catch (IOException ignore) {
+                                            }
+                                        }
                                     }
                                     return null;
                                 }

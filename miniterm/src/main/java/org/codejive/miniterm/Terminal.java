@@ -2,6 +2,7 @@ package org.codejive.miniterm;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.function.Consumer;
 
 /**
  * Platform-independent terminal operations interface.
@@ -102,7 +103,7 @@ public interface Terminal extends AutoCloseable {
      *
      * @param handler the handler to call on resize, or null to remove
      */
-    void onResize(Runnable handler);
+    void onResize(Consumer<Size> handler);
 
     /**
      * Closes the terminal and releases resources.

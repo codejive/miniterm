@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 import org.codejive.miniterm.Terminal;
 
 /**
@@ -49,7 +50,7 @@ public final class LegacyWindowsTerminal implements Terminal {
     private int savedOutputMode = -1;
     private boolean rawModeEnabled;
     private volatile boolean closing;
-    private volatile Runnable resizeHandler;
+    private volatile Consumer<Size> resizeHandler;
     private int peekedChar = -2;
 
     /** Creates a new Windows terminal instance. */
@@ -167,7 +168,7 @@ public final class LegacyWindowsTerminal implements Terminal {
     }
 
     @Override
-    public void onResize(Runnable handler) {
+    public void onResize(Consumer<Size> handler) {
         this.resizeHandler = handler;
     }
 
@@ -190,8 +191,13 @@ public final class LegacyWindowsTerminal implements Terminal {
             if (event == null) continue;
 
             if (event[0] == WinConsoleNative.WINDOW_BUFFER_SIZE_EVENT) {
-                Runnable h = resizeHandler;
-                if (h != null) h.run();
+                Consumer<Size> h = resizeHandler;
+                if (h != null) {
+                    try {
+                        h.accept(getSize());
+                    } catch (IOException ignore) {
+                    }
+                }
                 continue;
             }
             if (event[0] != WinConsoleNative.KEY_EVENT) continue;
