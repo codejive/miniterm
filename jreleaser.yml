@@ -4,8 +4,8 @@ project:
   longDescription: |
     miniterm is a minimal terminal library for Java providing platform-specific
     implementations for terminal manipulation. It includes a legacy Java 8+
-    implementation (miniterm) and a modern Java 22+ FFM-based implementation
-    (miniterm-ffm).
+    implementation (miniterm), a modern Java 22+ FFM-based implementation
+    (miniterm-ffm), and a compact ANSI escape sequence parser (ansiparser).
   authors:
     - Tako Schotanus
   tags:
@@ -26,7 +26,7 @@ project:
 assemble:
   enabled: false
 
-# Maven Central deployment - all three staging repos (parent + two modules)
+# Maven Central deployment - all staging repos (parent + all submodules)
 deploy:
   maven:
     mavenCentral:

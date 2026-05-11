@@ -38,6 +38,7 @@
     <modules>
         <module>miniterm</module>
         <module>miniterm-ffm</module>
+        <module>ansiparser</module>
     </modules>
 
     <properties>

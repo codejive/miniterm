@@ -22,7 +22,7 @@ This project uses [JReleaser](https://jreleaser.org/) for automated releases to 
    - Deploys staging artifacts to local directories
    - Commits and pushes the version change
    - Creates a GitHub Release with auto-generated changelog
-   - Publishes both `miniterm` and `miniterm-ffm` to Maven Central
+   - Publishes `miniterm`, `miniterm-ffm`, and `ansiparser` to Maven Central
    - Bumps versions to the next `-SNAPSHOT` and pushes
 
 4. **Verify the release**
