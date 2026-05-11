@@ -3,8 +3,11 @@
 `miniterm` is a Java library that provides low-level terminal access. Its main selling point is that it is extremely small (**~25KB**), making it ideal for CLI tools and applications where keeping dependencies lightweight matters.
 
 Two variants are available:
-- **`miniterm`** — legacy implementation, works with Java 8+
-- **`miniterm-ffm`** — modern implementation using the Foreign Function & Memory API, requires Java 22+
+- **[`miniterm`](miniterm/README.md)** — legacy implementation, works with Java 8+
+- **[`miniterm-ffm`](miniterm-ffm/README.md)** — modern implementation using the Foreign Function & Memory API, requires Java 22+
+
+And then we have a utility module:
+- **[`ansiparser`](ansiparser/README.md)** — compact ANSI escape sequence parser, works with Java 8+
 
 **Philosophy** : this project has been expressly created to be as minimal as possible, it only offers the most essential functionality that is missing from Java to be able to use the features of a modern Terminal. Several other projects exist that do this as well, but they normally come with a whole bunch of other things that you might not need. `miniterm` on the other hand *only* does the work that you can't do with standard Java APIs. Everything else can be built on top.
 
@@ -45,51 +48,36 @@ while (true) {
 }
 ```
 
-## Adding the dependency
-
-### JBang
+### Read key presses & ANSI sequences
 
 ```java
-//DEPS org.codejive.miniterm:miniterm:0.1.0
+terminal.enableRawMode();
+AnsiReader reader = new AnsiReader(() -> terminal.read(-1));
+String token;
+while ((token = reader.read()) != null) {
+    if (token.startsWith("\u001b")) {
+        if (token.equals("\u001b[A")) {
+            System.out.println("Up arrow");
+        } else { /* etc... */ }
+    } else if (token.charAt(0) == 3) {
+        break; // Ctrl+C
+    } else {
+        System.out.println("Key pressed: " + token);
+    }
+}
 ```
 
-For the FFM variant (Java 22+):
+## Modules
 
-```java
-//DEPS org.codejive.miniterm:miniterm-ffm:0.1.0
-```
+Three artifacts are published independently:
 
-### Maven
+| Artifact | Description |
+|----------|-------------|
+| [`miniterm`](miniterm/README.md) | Legacy terminal implementation, Java 8+ |
+| [`miniterm-ffm`](miniterm-ffm/README.md) | Modern FFM-based terminal implementation, Java 22+ |
+| [`ansiparser`](ansiparser/README.md) | Compact ANSI escape sequence parser, Java 8+ |
 
-```xml
-<dependency>
-    <groupId>org.codejive.miniterm</groupId>
-    <artifactId>miniterm</artifactId>
-    <version>0.1.0</version>
-</dependency>
-```
-
-For the FFM variant (Java 22+):
-
-```xml
-<dependency>
-    <groupId>org.codejive.miniterm</groupId>
-    <artifactId>miniterm-ffm</artifactId>
-    <version>0.1.0</version>
-</dependency>
-```
-
-### Gradle
-
-```kotlin
-implementation("org.codejive.miniterm:miniterm:0.1.0")
-```
-
-For the FFM variant (Java 22+):
-
-```kotlin
-implementation("org.codejive.miniterm:miniterm-ffm:0.1.0")
-```
+For dependency coordinates (Maven, Gradle, JBang) and module-specific usage details, see the individual module READMEs linked above.
 
 ## Building
 
