@@ -14,7 +14,7 @@ import java.util.function.Consumer;
  * <p>This interface abstracts the low-level terminal operations that differ between Unix
  * (Linux/macOS) and Windows platforms.
  */
-public interface Terminal extends AutoCloseable {
+public interface Terminal extends Appendable, AutoCloseable {
 
     /**
      * Enables raw mode on the terminal.
@@ -87,6 +87,24 @@ public interface Terminal extends AutoCloseable {
      * @throws IOException if writing fails
      */
     void write(String s) throws IOException;
+
+    @Override
+    default Appendable append(char c) throws IOException {
+        write(new byte[] {(byte) c});
+        return this;
+    }
+
+    @Override
+    default Appendable append(CharSequence csq) throws IOException {
+        write(csq.toString());
+        return this;
+    }
+
+    @Override
+    default Appendable append(CharSequence csq, int start, int end) throws IOException {
+        write(csq.subSequence(start, end).toString());
+        return this;
+    }
 
     /**
      * Returns the charset used for terminal I/O.
