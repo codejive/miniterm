@@ -178,6 +178,8 @@ public final class TermProber {
                 if (b.colors() < 8) b.colors(8);
             } else if (code == DA1_PARAM_256_COLOR) {
                 if (b.colors() < 256) b.colors(256);
+            } else if (code == DA1_PARAM_SIXEL) {
+                b.sixel(true);
             }
         }
         return true;
@@ -222,7 +224,8 @@ public final class TermProber {
                         .unicode(true)
                         .italic(true)
                         .strikethrough(true)
-                        .overline(true);
+                        .overline(true)
+                        .kittyGraphics(true);
                 break;
             case DA2_TYPE_XTERM:
                 // xterm and iTerm2 both report type 0; distinguish via TERM_PROGRAM env var

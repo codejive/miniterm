@@ -76,6 +76,15 @@ public final class TermCaps {
     /** Whether the terminal supports overline text. */
     private final boolean overline;
 
+    /** Whether the terminal supports sixel bitmap graphics (DCS sequences). */
+    private final boolean sixel;
+
+    /** Whether the terminal supports the Kitty terminal graphics protocol (APC-based). */
+    private final boolean kittyGraphics;
+
+    /** Whether the terminal supports the iTerm2 inline image protocol (OSC 1337). */
+    private final boolean iterm2Images;
+
     private TermCaps(Builder b) {
         this.colors = b.colors;
         this.altScreen = b.altScreen;
@@ -89,6 +98,9 @@ public final class TermCaps {
         this.italic = b.italic;
         this.strikethrough = b.strikethrough;
         this.overline = b.overline;
+        this.sixel = b.sixel;
+        this.kittyGraphics = b.kittyGraphics;
+        this.iterm2Images = b.iterm2Images;
     }
 
     // ── Capability getters ────────────────────────────────────────────────
@@ -151,6 +163,21 @@ public final class TermCaps {
     /** Whether the terminal supports overline text. */
     public boolean overline() {
         return overline;
+    }
+
+    /** Whether the terminal supports sixel bitmap graphics (DCS sequences). */
+    public boolean sixel() {
+        return sixel;
+    }
+
+    /** Whether the terminal supports the Kitty terminal graphics protocol (APC-based). */
+    public boolean kittyGraphics() {
+        return kittyGraphics;
+    }
+
+    /** Whether the terminal supports the iTerm2 inline image protocol (OSC 1337). */
+    public boolean iterm2Images() {
+        return iterm2Images;
     }
 
     // ── Terminal control helpers ──────────────────────────────────────────
@@ -365,12 +392,51 @@ public final class TermCaps {
             b.colors(8).altScreen(true);
         } else if (term.startsWith("rxvt")) {
             b.colors(8).altScreen(true).mouse(true).unicode(true);
+        } else if ("xterm-kitty".equals(term)) {
+            // Ghostty and other terminals that set TERM=xterm-kitty support the Kitty graphics
+            // protocol
+            b.colors(16_777_216)
+                    .altScreen(true)
+                    .mouse(true)
+                    .settableTitle(true)
+                    .unicode(true)
+                    .kittyGraphics(true);
         } else if (term.startsWith("xterm") || term.startsWith("vte")) {
             b.colors(8).altScreen(true).mouse(true).settableTitle(true).unicode(true);
         } else if (term.startsWith("linux")) {
             b.colors(8).altScreen(true).unicode(true);
         } else if (term.startsWith("konsole")) {
             b.colors(8).altScreen(true).mouse(true).settableTitle(true).unicode(true);
+        } else if (term.startsWith("foot")) {
+            // foot (Wayland) 1.2.0+ supports sixel
+            b.colors(256)
+                    .altScreen(true)
+                    .mouse(true)
+                    .bracketedPaste(true)
+                    .focusTracking(true)
+                    .unicode(true)
+                    .sixel(true);
+        } else if (term.startsWith("mlterm")) {
+            // mlterm 3.1.9+ supports sixel
+            b.colors(256).altScreen(true).mouse(true).unicode(true).sixel(true);
+        } else if (term.startsWith("mintty")) {
+            // mintty 2.6.0+ supports sixel and the iTerm2 inline image protocol
+            b.colors(256)
+                    .altScreen(true)
+                    .mouse(true)
+                    .bracketedPaste(true)
+                    .unicode(true)
+                    .sixel(true)
+                    .iterm2Images(true);
+        } else if (term.startsWith("contour")) {
+            // Contour supports sixel natively
+            b.colors(16_777_216)
+                    .altScreen(true)
+                    .mouse(true)
+                    .bracketedPaste(true)
+                    .focusTracking(true)
+                    .unicode(true)
+                    .sixel(true);
         } else {
             // Unknown terminal — assume at least 8 colours
             b.colors(8);
@@ -419,7 +485,8 @@ public final class TermCaps {
                     .unicode(true)
                     .italic(true)
                     .strikethrough(true)
-                    .overline(true);
+                    .overline(true)
+                    .sixel(true); // Windows Terminal 1.22+ (August 2024)
             return;
         }
 
@@ -450,7 +517,10 @@ public final class TermCaps {
                             .unicode(true)
                             .italic(true)
                             .strikethrough(true)
-                            .overline(true);
+                            .overline(true)
+                            .sixel(true) // iTerm2 3.3.0+
+                            .kittyGraphics(true) // iTerm2 added Kitty graphics in 2024
+                            .iterm2Images(true);
                     break;
                 case "WezTerm":
                     b.colors(16_777_216)
@@ -464,7 +534,10 @@ public final class TermCaps {
                             .unicode(true)
                             .italic(true)
                             .strikethrough(true)
-                            .overline(true);
+                            .overline(true)
+                            .sixel(true)
+                            .kittyGraphics(true)
+                            .iterm2Images(true);
                     break;
                 case "kitty":
                     b.colors(16_777_216)
@@ -477,11 +550,28 @@ public final class TermCaps {
                             .unicode(true)
                             .italic(true)
                             .strikethrough(true)
-                            .overline(true);
+                            .overline(true)
+                            .kittyGraphics(true); // kitty does not support sixel by design
                     break;
                 case "Apple_Terminal":
                     if (b.colors < 256) b.colors(256);
                     b.settableTitle(true).unicode(true);
+                    break;
+                case "Ghostty":
+                case "ghostty":
+                    b.colors(16_777_216)
+                            .altScreen(true)
+                            .mouse(true)
+                            .bracketedPaste(true)
+                            .focusTracking(true)
+                            .synchronizedOutput(true)
+                            .hyperlinks(true)
+                            .settableTitle(true)
+                            .unicode(true)
+                            .italic(true)
+                            .strikethrough(true)
+                            .overline(true)
+                            .kittyGraphics(true);
                     break;
                 default:
                     break;
@@ -493,6 +583,17 @@ public final class TermCaps {
         // We ensure mouse is reported as available since tmux passes it through.
         if (env.get("TMUX") != null) {
             b.mouse(true);
+        }
+
+        // KONSOLE_VERSION — KDE Konsole 22.04+ supports sixel and the Kitty graphics protocol.
+        if (env.get("KONSOLE_VERSION") != null) {
+            if (b.colors < 256) b.colors(256);
+            b.sixel(true).kittyGraphics(true);
+        }
+
+        // ZELLIJ — Zellij multiplexer 0.31.0+ passes sixel through to the underlying terminal.
+        if (env.get("ZELLIJ") != null) {
+            b.sixel(true);
         }
 
         // Windows fallback: if no special env var fired but we are on Windows,
@@ -532,6 +633,9 @@ public final class TermCaps {
         private boolean italic;
         private boolean strikethrough;
         private boolean overline;
+        private boolean sixel;
+        private boolean kittyGraphics;
+        private boolean iterm2Images;
 
         private Builder() {}
 
@@ -548,6 +652,9 @@ public final class TermCaps {
             this.italic = base.italic;
             this.strikethrough = base.strikethrough;
             this.overline = base.overline;
+            this.sixel = base.sixel;
+            this.kittyGraphics = base.kittyGraphics;
+            this.iterm2Images = base.iterm2Images;
         }
 
         /** Returns the currently set colors value. */
@@ -612,6 +719,21 @@ public final class TermCaps {
 
         public Builder overline(boolean v) {
             this.overline = v;
+            return this;
+        }
+
+        public Builder sixel(boolean v) {
+            this.sixel = v;
+            return this;
+        }
+
+        public Builder kittyGraphics(boolean v) {
+            this.kittyGraphics = v;
+            return this;
+        }
+
+        public Builder iterm2Images(boolean v) {
+            this.iterm2Images = v;
             return this;
         }
 

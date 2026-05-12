@@ -1,6 +1,6 @@
 //DEPS org.codejive.miniterm:miniterm:0.1.2
 //DEPS org.codejive.miniterm:ansiparser:0.1.2
-//DEPS org.codejive.miniterm:termcap:0.1.2
+//DEPS org.codejive.miniterm:termcap:0.1.3-SNAPSHOT
 
 package examples;
 
@@ -38,5 +38,8 @@ public class PrintCaps {
         System.out.println("  italic         : " + caps.italic());
         System.out.println("  strikethrough  : " + caps.strikethrough());
         System.out.println("  overline       : " + caps.overline());
+        System.out.println("  sixel          : " + caps.sixel());
+        System.out.println("  kittyGraphics  : " + caps.kittyGraphics());
+        System.out.println("  iterm2Images   : " + caps.iterm2Images());
     }
 }
