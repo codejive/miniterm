@@ -9,6 +9,7 @@ Two variants are available:
 And then we have utility modules:
 - **[`ansiparser`](ansiparser/README.md)** — compact ANSI escape sequence parser
 - **[`mousetrack`](mousetrack/README.md)** — terminal mouse-tracking helpers and event parser
+- **[`termcap`](termcap/README.md)** — terminal capability detection
 
 **Philosophy** : this project has been expressly created to be as minimal as possible, it only offers the most essential functionality that is missing from Java to be able to use the features of a modern Terminal. Several other projects exist that do this as well, but they normally come with a whole bunch of other things that you might not need. `miniterm` on the other hand *only* does the work that you can't do with standard Java APIs. Everything else can be built on top.
 
@@ -85,6 +86,15 @@ while ((seq = reader.read()) != null) {
 }
 ```
 
+### Detecting terminal capabilities
+
+```java
+TermCaps caps = TermCaps.detect();
+if (caps.colors() >= 256) {
+    // render with rich colours
+}
+```
+
 ## Modules
 
 Three artifacts are published independently:
@@ -95,6 +105,7 @@ Three artifacts are published independently:
 | [`miniterm-ffm`](miniterm-ffm/README.md) | Modern FFM-based terminal implementation, Java 22+ |
 | [`ansiparser`](ansiparser/README.md) | Compact ANSI escape sequence parser, Java 8+ |
 | [`mousetrack`](mousetrack/README.md) | Terminal mouse-tracking helpers and event parser, Java 8+ |
+| [`termcap`](termcap/README.md) | Terminal capability detection, Java 8+ |
 
 For dependency coordinates (Maven, Gradle, JBang) and module-specific usage details, see the individual module READMEs linked above.
 

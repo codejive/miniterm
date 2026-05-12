@@ -40,6 +40,7 @@
         <module>miniterm-ffm</module>
         <module>ansiparser</module>
         <module>mousetrack</module>
+        <module>termcap</module>
     </modules>
 
     <properties>
