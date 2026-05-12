@@ -43,11 +43,11 @@ jobs:
         run: |
           ./mvnw --no-transfer-progress --batch-mode versions:set -DnewVersion=${{ inputs.version }} -DprocessAllModules=true versions:commit
           find . -name "README.md" -exec sed -i \
-            -e 's/\(org\.codejive\.miniterm:[^:]*\):[a-zA-Z0-9._-]*/\1:${{ inputs.version }}/g' \
+            -e 's/\(org\.codejive\.miniterm:[^:]*\):[0-9][a-zA-Z0-9._-]*/\1:${{ inputs.version }}/g' \
             -e 's|<version>[^<]*</version>|<version>${{ inputs.version }}</version>|g' \
             {} \;
           find examples -type f -exec sed -i \
-            -e 's/\(org\.codejive\.miniterm:[^:]*\):[a-zA-Z0-9._-]*/\1:${{ inputs.version }}/g' \
+            -e 's/\(org\.codejive\.miniterm:[^:]*\):[0-9][a-zA-Z0-9._-]*/\1:${{ inputs.version }}/g' \
             {} \;
 
       - name: Build and deploy to staging

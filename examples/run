@@ -2,7 +2,7 @@
 
 DEP="org.codejive.miniterm:miniterm:0.1.1"
 if [[ -n "$1" ]]; then
-	DEP="org.codejive.miniterm:miniterm:0.1.1$1"
+	DEP="org.codejive.miniterm:miniterm:$1"
 fi
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
