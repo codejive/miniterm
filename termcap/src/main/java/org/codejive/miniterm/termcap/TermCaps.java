@@ -236,6 +236,28 @@ public final class TermCaps {
     }
 
     /**
+     * Returns {@code true} if {@code sequence} is the bracketed-paste <em>start</em> marker ({@code
+     * ESC[200~}).
+     *
+     * @param sequence input sequence to test
+     * @return {@code true} when the sequence signals the beginning of a pasted region
+     */
+    public static boolean isPasteStart(String sequence) {
+        return (CSI + "200~").equals(sequence);
+    }
+
+    /**
+     * Returns {@code true} if {@code sequence} is the bracketed-paste <em>end</em> marker ({@code
+     * ESC[201~}).
+     *
+     * @param sequence input sequence to test
+     * @return {@code true} when the sequence signals the end of a pasted region
+     */
+    public static boolean isPasteEnd(String sequence) {
+        return (CSI + "201~").equals(sequence);
+    }
+
+    /**
      * Enables focus-in / focus-out tracking (DEC private mode 1004).
      *
      * <p>The terminal sends {@code ESC[I} when the window gains focus and {@code ESC[O} when it
