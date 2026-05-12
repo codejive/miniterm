@@ -40,7 +40,7 @@ deploy:
 release:
   github:
     owner: codejive
-    name: miniterm
+    name: java-miniterm
     overwrite: true
     changelog:
       formatted: ALWAYS
