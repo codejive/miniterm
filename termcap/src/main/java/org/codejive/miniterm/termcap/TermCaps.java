@@ -281,6 +281,26 @@ public final class TermCaps {
     }
 
     /**
+     * Returns {@code true} if {@code sequence} is the focus-in event ({@code ESC[I}).
+     *
+     * @param sequence input sequence to test
+     * @return {@code true} when the sequence signals the terminal window has gained focus
+     */
+    public static boolean isFocusIn(String sequence) {
+        return (CSI + "I").equals(sequence);
+    }
+
+    /**
+     * Returns {@code true} if {@code sequence} is the focus-out event ({@code ESC[O}).
+     *
+     * @param sequence input sequence to test
+     * @return {@code true} when the sequence signals the terminal window has lost focus
+     */
+    public static boolean isFocusOut(String sequence) {
+        return (CSI + "O").equals(sequence);
+    }
+
+    /**
      * Begins a synchronized-output frame (DEC private mode 2026).
      *
      * <p>Wrap one full frame's worth of writes between {@code beginSynchronizedOutput} and {@link
