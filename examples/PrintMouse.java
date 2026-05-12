@@ -1,5 +1,5 @@
-//DEPS org.codejive.miniterm:ansiparser:0.1.2
-//DEPS org.codejive.miniterm:mousetrack:0.1.2
+//DEPS org.codejive.miniterm:ansiparser:0.1.3
+//DEPS org.codejive.miniterm:mousetrack:0.1.3
 
 package examples;
 
