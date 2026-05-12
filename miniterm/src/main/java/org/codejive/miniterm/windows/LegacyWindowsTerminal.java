@@ -158,12 +158,12 @@ public final class LegacyWindowsTerminal implements Terminal {
     }
 
     @Override
-    public Charset getCharset() {
+    public Charset charset() {
         return charset;
     }
 
     @Override
-    public boolean isRawModeEnabled() {
+    public boolean rawModeEnabled() {
         return rawModeEnabled;
     }
 

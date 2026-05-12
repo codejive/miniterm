@@ -376,7 +376,7 @@ public final class FfmUnixTerminal implements Terminal {
      *
      * @return the terminal charset
      */
-    public Charset getCharset() {
+    public Charset charset() {
         return charset;
     }
 
@@ -385,7 +385,7 @@ public final class FfmUnixTerminal implements Terminal {
      *
      * @return true if raw mode is enabled
      */
-    public boolean isRawModeEnabled() {
+    public boolean rawModeEnabled() {
         return rawModeEnabled;
     }
 

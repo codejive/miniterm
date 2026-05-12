@@ -111,14 +111,14 @@ public interface TerminalBase extends Appendable, AutoCloseable {
      *
      * @return the terminal charset
      */
-    Charset getCharset();
+    Charset charset();
 
     /**
      * Checks if raw mode is currently enabled.
      *
      * @return true if raw mode is enabled
      */
-    boolean isRawModeEnabled();
+    boolean rawModeEnabled();
 
     /**
      * Registers a handler to be called when the terminal is resized.

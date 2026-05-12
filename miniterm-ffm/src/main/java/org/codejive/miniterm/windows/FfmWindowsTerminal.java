@@ -244,12 +244,12 @@ public final class FfmWindowsTerminal implements Terminal {
     }
 
     @Override
-    public Charset getCharset() {
+    public Charset charset() {
         return StandardCharsets.UTF_8;
     }
 
     @Override
-    public boolean isRawModeEnabled() {
+    public boolean rawModeEnabled() {
         return rawModeEnabled;
     }
 
