@@ -6,13 +6,13 @@ Two variants are available:
 - **[`miniterm`](miniterm/README.md)** — legacy implementation, works with Java 8+
 - **[`miniterm-ffm`](miniterm-ffm/README.md)** — modern implementation using the Foreign Function & Memory API, requires Java 22+
 
-And then we have utility modules:
+**Philosophy** : these modules, and the project in general, have been expressly created to be as minimal as possible, it only offers the most essential functionality that is missing from Java to be able to use the features of a modern Terminal. Several other projects exist that do this as well, but they normally come with a whole bunch of other things that you might not need. `miniterm` on the other hand *only* does the work that you can't do with standard Java APIs. Everything else can be built on top.
+
+And then we have utility modules (the "built on top"):
 - **[`ansiparser`](ansiparser/README.md)** — compact ANSI escape sequence parser
 - **[`colors`](colors/README.md)** — terminal colour palette querying and setting
 - **[`mousetrack`](mousetrack/README.md)** — terminal mouse-tracking helpers and event parser
 - **[`termcap`](termcap/README.md)** — terminal capability detection
-
-**Philosophy** : this project has been expressly created to be as minimal as possible, it only offers the most essential functionality that is missing from Java to be able to use the features of a modern Terminal. Several other projects exist that do this as well, but they normally come with a whole bunch of other things that you might not need. `miniterm` on the other hand *only* does the work that you can't do with standard Java APIs. Everything else can be built on top.
 
 **Acknowledgements** : `miniterm` is inspired by and has unashamedly copied ideas and code from [AEsh](https://github.com/aeshell/aesh-readline) and [Tamboui Panama backend](https://github.com/tamboui/tamboui/tree/main/tamboui-panama-backend).
 
@@ -154,6 +154,8 @@ examples\run-ffm.bat
 The scripts will list the available examples and let you choose one to run:
 
 - **PrintAnsi** — prints the the ANSI sequence of each key pressed
+- **PrintCaps** — prints the capabilities that the terminal supports
+- **PrintColors** — detects and prints the colors that the terminal supports
 - **PrintKeys** — prints the code of each key pressed
 - **PrintMouse** — prints mouse events
 - **PrintSize** — prints the current terminal dimensions
