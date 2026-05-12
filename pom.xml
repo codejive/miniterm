@@ -39,6 +39,7 @@
         <module>miniterm</module>
         <module>miniterm-ffm</module>
         <module>ansiparser</module>
+        <module>mousetrack</module>
     </modules>
 
     <properties>

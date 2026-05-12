@@ -6,8 +6,9 @@ Two variants are available:
 - **[`miniterm`](miniterm/README.md)** — legacy implementation, works with Java 8+
 - **[`miniterm-ffm`](miniterm-ffm/README.md)** — modern implementation using the Foreign Function & Memory API, requires Java 22+
 
-And then we have a utility module:
-- **[`ansiparser`](ansiparser/README.md)** — compact ANSI escape sequence parser, works with Java 8+
+And then we have utility modules:
+- **[`ansiparser`](ansiparser/README.md)** — compact ANSI escape sequence parser
+- **[`mousetrack`](mousetrack/README.md)** — terminal mouse-tracking helpers and event parser
 
 **Philosophy** : this project has been expressly created to be as minimal as possible, it only offers the most essential functionality that is missing from Java to be able to use the features of a modern Terminal. Several other projects exist that do this as well, but they normally come with a whole bunch of other things that you might not need. `miniterm` on the other hand *only* does the work that you can't do with standard Java APIs. Everything else can be built on top.
 
@@ -53,16 +54,33 @@ while (true) {
 ```java
 terminal.enableRawMode();
 AnsiReader reader = new AnsiReader(() -> terminal.read(-1));
-String token;
-while ((token = reader.read()) != null) {
-    if (token.startsWith("\u001b")) {
-        if (token.equals("\u001b[A")) {
+String seq;
+while ((seq = reader.read()) != null) {
+    if (seq.startsWith("\u001b")) {
+        if (seq.equals("\u001b[A")) {
             System.out.println("Up arrow");
         } else { /* etc... */ }
-    } else if (token.charAt(0) == 3) {
+    } else if (seq.charAt(0) == 3) {
         break; // Ctrl+C
     } else {
-        System.out.println("Key pressed: " + token);
+        System.out.println("Key pressed: " + seq);
+    }
+}
+```
+
+### Handling mouse events
+
+```java
+terminal.enableRawMode();
+MouseTracking.enable(terminal, MouseTracking.Protocol.NORMAL);
+MouseTracking.enableEncoding(terminal, MouseTracking.Encoding.SGR);
+AnsiReader reader = new AnsiReader(() -> terminal.read(-1));
+String seq;
+while ((seq = reader.read()) != null) {
+    if (MouseTracking.isMouseEvent(seq)) {
+        MouseEvent ev = MouseTracking.parse(seq);
+        System.out.printf("%-8s %-12s at (%d, %d)%n",
+                ev.type(), ev.button(), ev.x(), ev.y());
     }
 }
 ```
@@ -76,6 +94,7 @@ Three artifacts are published independently:
 | [`miniterm`](miniterm/README.md) | Legacy terminal implementation, Java 8+ |
 | [`miniterm-ffm`](miniterm-ffm/README.md) | Modern FFM-based terminal implementation, Java 22+ |
 | [`ansiparser`](ansiparser/README.md) | Compact ANSI escape sequence parser, Java 8+ |
+| [`mousetrack`](mousetrack/README.md) | Terminal mouse-tracking helpers and event parser, Java 8+ |
 
 For dependency coordinates (Maven, Gradle, JBang) and module-specific usage details, see the individual module READMEs linked above.
 
@@ -111,6 +130,8 @@ examples\run-ffm.bat
 
 The scripts will list the available examples and let you choose one to run:
 
+- **PrintAnsi** — prints the the ANSI sequence of each key pressed
+- **PrintKeys** — prints the code of each key pressed
+- **PrintMouse** — prints mouse events
 - **PrintSize** — prints the current terminal dimensions
 - **WatchSize** — watches and prints terminal size changes in real time
-- **PrintKeys** — prints the code of each key pressed (Ctrl+C to exit)
