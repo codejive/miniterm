@@ -62,7 +62,7 @@ jobs:
           git push
 
       - name: Run JReleaser
-        run: ./mvnw --no-transfer-progress --batch-mode jreleaser:full-release
+        run: ./mvnw --no-transfer-progress --batch-mode -N jreleaser:full-release
 
       - name: Set next development version
         run: |
