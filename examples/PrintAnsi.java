@@ -1,4 +1,4 @@
-//DEPS org.codejive.miniterm:ansiparser:0.1.1-SNAPSHOT
+//DEPS org.codejive.miniterm:ansiparser:0.1.1
 
 package examples;
 
