@@ -8,6 +8,7 @@ Two variants are available:
 
 And then we have utility modules:
 - **[`ansiparser`](ansiparser/README.md)** — compact ANSI escape sequence parser
+- **[`colors`](colors/README.md)** — terminal colour palette querying and setting
 - **[`mousetrack`](mousetrack/README.md)** — terminal mouse-tracking helpers and event parser
 - **[`termcap`](termcap/README.md)** — terminal capability detection
 
@@ -95,6 +96,16 @@ if (caps.colors() >= 256) {
 }
 ```
 
+### Query colors
+
+```java
+Color bg = TermColors.queryBackground(terminal, () -> terminal.read(500));
+if (bg != null) {
+    // luminance check for dark/light theme detection
+    boolean dark = (0.299 * bg.r8() + 0.587 * bg.g8() + 0.114 * bg.b8()) < 128;
+}
+```
+
 ## Modules
 
 Three artifacts are published independently:
@@ -106,6 +117,7 @@ Three artifacts are published independently:
 | [`ansiparser`](ansiparser/README.md) | Compact ANSI escape sequence parser, Java 8+ |
 | [`mousetrack`](mousetrack/README.md) | Terminal mouse-tracking helpers and event parser, Java 8+ |
 | [`termcap`](termcap/README.md) | Terminal capability detection, Java 8+ |
+| [`colors`](colors/README.md) | Terminal colour palette querying and setting via OSC sequences, Java 8+ |
 
 For dependency coordinates (Maven, Gradle, JBang) and module-specific usage details, see the individual module READMEs linked above.
 

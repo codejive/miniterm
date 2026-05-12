@@ -41,6 +41,7 @@
         <module>ansiparser</module>
         <module>mousetrack</module>
         <module>termcap</module>
+        <module>colors</module>
     </modules>
 
     <properties>
