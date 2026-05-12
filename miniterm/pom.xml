@@ -223,6 +223,7 @@
                                               failonerror="true">
                                             <arg value="-shared"/>
                                             <arg value="-O2"/>
+                                            <arg value="-s"/>
                                             <arg value="-I${env.JAVA_HOME}/include"/>
                                             <arg value="-I${project.basedir}/src/main/native/win32"/>
                                             <arg value="-o"/>

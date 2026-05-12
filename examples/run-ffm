@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-DEP="org.codejive.miniterm:miniterm:0.1.4"
+DEP="org.codejive.miniterm:miniterm-ffm:0.1.4"
 if [[ -n "$1" ]]; then
-	DEP="org.codejive.miniterm:miniterm:$1"
+	DEP="org.codejive.miniterm:miniterm-ffm:$1"
 fi
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"

@@ -39,6 +39,9 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
+      - name: Install MinGW-w64 cross-compiler
+        run: sudo apt-get install -y mingw-w64
+
       - name: Set release version
         run: |
           ./mvnw --no-transfer-progress --batch-mode versions:set -DnewVersion=${{ inputs.version }} -DprocessAllModules=true versions:commit
@@ -51,7 +54,7 @@ jobs:
             {} \;
 
       - name: Build and deploy to staging
-        run: ./mvnw --no-transfer-progress --batch-mode clean deploy -Prelease
+        run: ./mvnw --no-transfer-progress --batch-mode clean deploy -Prelease,cross-windows
 
       - name: Commit release version
         run: |
