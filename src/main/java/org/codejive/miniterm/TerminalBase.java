@@ -39,7 +39,7 @@ public interface TerminalBase extends Appendable, AutoCloseable {
      * @return the terminal size
      * @throws IOException if the size cannot be determined
      */
-    Size getSize() throws IOException;
+    Size size() throws IOException;
 
     /**
      * Reads a single character from the terminal with timeout.

@@ -103,7 +103,7 @@ public final class LegacyWindowsTerminal implements Terminal {
     }
 
     @Override
-    public Size getSize() throws IOException {
+    public Size size() throws IOException {
         int[] size = WinConsoleNative.getConsoleSize(OUTPUT_HANDLE);
         if (size == null) return new Size(80, 24);
         return new Size(size[0], size[1]);
@@ -194,7 +194,7 @@ public final class LegacyWindowsTerminal implements Terminal {
                 Consumer<Size> h = resizeHandler;
                 if (h != null) {
                     try {
-                        h.accept(getSize());
+                        h.accept(size());
                     } catch (IOException ignore) {
                     }
                 }

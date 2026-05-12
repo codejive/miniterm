@@ -31,7 +31,7 @@ public class Example {
 ### Get terminal size
 
 ```java
-var size = terminal.getSize();
+var size = terminal.size();
 System.out.println("The size of the terminal is " + size);
 ```
 

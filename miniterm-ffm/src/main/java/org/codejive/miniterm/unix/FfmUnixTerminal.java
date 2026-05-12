@@ -260,7 +260,7 @@ public final class FfmUnixTerminal implements Terminal {
      * @return the terminal size
      * @throws IOException if the size cannot be determined
      */
-    public Size getSize() throws IOException {
+    public Size size() throws IOException {
         int ioctlResult = LibC.ioctl(ttyFd, LibC.TIOCGWINSZ, winsize);
         if (ioctlResult == 0) {
             var cols = Short.toUnsignedInt((short) WS_COL.get(winsize, 0L));
@@ -473,7 +473,7 @@ public final class FfmUnixTerminal implements Terminal {
         }
         // Call handler outside of lock to avoid deadlock
         if (handler != null) {
-            handler.accept(getSize());
+            handler.accept(size());
         }
     }
 

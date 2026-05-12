@@ -142,7 +142,7 @@ public final class LegacyUnixTerminal implements Terminal {
     }
 
     @Override
-    public Size getSize() throws IOException {
+    public Size size() throws IOException {
         String result = stty("size").trim();
         // Output is "rows cols"
         String[] parts = result.split("\\s+");
@@ -407,7 +407,7 @@ public final class LegacyUnixTerminal implements Terminal {
                                         Consumer<Size> h = self.resizeHandler;
                                         if (h != null) {
                                             try {
-                                                h.accept(self.getSize());
+                                                h.accept(self.size());
                                             } catch (IOException ignore) {
                                             }
                                         }

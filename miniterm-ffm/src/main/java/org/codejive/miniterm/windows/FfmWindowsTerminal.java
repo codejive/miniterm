@@ -128,7 +128,7 @@ public final class FfmWindowsTerminal implements Terminal {
     }
 
     @Override
-    public Size getSize() throws IOException {
+    public Size size() throws IOException {
         if (Kernel32.getConsoleScreenBufferInfo(outputHandle, screenBufferInfo) == 0) {
             throw new RuntimeException(
                     "Failed to get console screen buffer info (error="
@@ -192,7 +192,7 @@ public final class FfmWindowsTerminal implements Terminal {
         } else if (eventType == Kernel32.WINDOW_BUFFER_SIZE_EVENT) {
             var handler = resizeHandler;
             if (handler != null) {
-                handler.accept(getSize());
+                handler.accept(size());
             }
         }
 
