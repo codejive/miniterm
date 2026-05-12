@@ -1,12 +1,13 @@
 @echo off
 setlocal enabledelayedexpansion
 
+set "DEP=org.codejive.miniterm:miniterm:0.1.0"
+if not "%~1"=="" set "DEP=org.codejive.miniterm:miniterm:%~1"
+
 set "SCRIPT_DIR=%~dp0"
 
-if not exist "%SCRIPT_DIR%..\miniterm\target\miniterm-*.jar" (
-    echo Warning: No jar files found. Please run 'mvn package' first.
-    exit /b 1
-)
+echo Warning: Make sure you have run 'mvn install' first.
+echo.
 
 set count=0
 for /f "delims=" %%f in ('dir /b /o:n "%SCRIPT_DIR%*.java" 2^>nul') do (
@@ -43,5 +44,4 @@ if %choice% gtr %count% (
 )
 
 set "selected=!file[%choice%]!"
-for /f "delims=" %%j in ('dir /b /o:n "%SCRIPT_DIR%..\miniterm\target\miniterm-*.jar" 2^>nul') do set "JARFILE=%%~j"
-"%SCRIPT_DIR%..\jbang.cmd" --cp "%SCRIPT_DIR%..\miniterm\target\!JARFILE!" "%SCRIPT_DIR%%selected%.java"
+"%SCRIPT_DIR%..\jbang.cmd" --deps "%DEP%" "%SCRIPT_DIR%%selected%.java"

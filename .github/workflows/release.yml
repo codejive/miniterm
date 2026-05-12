@@ -40,7 +40,15 @@ jobs:
           cache: maven
 
       - name: Set release version
-        run: ./mvnw --no-transfer-progress --batch-mode versions:set -DnewVersion=${{ inputs.version }} -DprocessAllModules=true versions:commit
+        run: |
+          ./mvnw --no-transfer-progress --batch-mode versions:set -DnewVersion=${{ inputs.version }} -DprocessAllModules=true versions:commit
+          find . -name "README.md" -exec sed -i \
+            -e 's/\(org\.codejive\.miniterm:[^:]*\):[a-zA-Z0-9._-]*/\1:${{ inputs.version }}/g' \
+            -e 's|<version>[^<]*</version>|<version>${{ inputs.version }}</version>|g' \
+            {} \;
+          find examples -type f -exec sed -i \
+            -e 's/\(org\.codejive\.miniterm:[^:]*\):[a-zA-Z0-9._-]*/\1:${{ inputs.version }}/g' \
+            {} \;
 
       - name: Build and deploy to staging
         run: ./mvnw --no-transfer-progress --batch-mode clean deploy -Prelease
@@ -57,7 +65,8 @@ jobs:
         run: ./mvnw --no-transfer-progress --batch-mode jreleaser:full-release
 
       - name: Set next development version
-        run: ./mvnw --no-transfer-progress --batch-mode build-helper:parse-version versions:set "-DnewVersion=\${parsedVersion.majorVersion}.\${parsedVersion.minorVersion}.\${parsedVersion.nextIncrementalVersion}-SNAPSHOT" -DprocessAllModules=true versions:commit
+        run: |
+          ./mvnw --no-transfer-progress --batch-mode build-helper:parse-version versions:set "-DnewVersion=\${parsedVersion.majorVersion}.\${parsedVersion.minorVersion}.\${parsedVersion.nextIncrementalVersion}-SNAPSHOT" -DprocessAllModules=true versions:commit
 
       - name: Commit next development version
         run: |

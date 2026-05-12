@@ -11,7 +11,6 @@ public class PrintAnsi {
         try (Terminal terminal = Terminal.create()) {
             terminal.enableRawMode();
             System.out.println("Press keys (Ctrl+C to exit):");
-            terminal.enableRawMode();
             AnsiReader reader = new AnsiReader(() -> terminal.read(-1));
             String token;
             while ((token = reader.read()) != null) {

@@ -17,7 +17,7 @@ This project uses [JReleaser](https://jreleaser.org/) for automated releases to 
    - Click **Run workflow**
 
 3. **What the workflow does**
-   - Updates all `pom.xml` versions to the release version
+   - Updates all `pom.xml`, `README.md`, and example file versions to the release version
    - Builds and signs artifacts (JARs, sources, javadoc) for both modules
    - Deploys staging artifacts to local directories
    - Commits and pushes the version change

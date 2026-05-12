@@ -1,11 +1,14 @@
 #!/usr/bin/env bash
 
+DEP="org.codejive.miniterm:miniterm:0.1.0"
+if [[ -n "$1" ]]; then
+	DEP="org.codejive.miniterm:miniterm:$1"
+fi
+
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-if ! compgen -G "$SCRIPT_DIR/../miniterm-ffm/target/miniterm-*.jar" > /dev/null 2>&1; then
-    echo "Warning: No jar files found. Please run 'mvn package' first."
-    exit 1
-fi
+echo "Warning: Make sure you have run 'mvn install' first."
+echo ""
 
 mapfile -t files < <(find "$SCRIPT_DIR" -maxdepth 1 -name '*.java' -printf '%f\n' | sed 's/\.java$//' | sort)
 
@@ -28,4 +31,4 @@ if ! [[ "$choice" =~ ^[0-9]+$ ]] || (( choice < 1 || choice > ${#files[@]} )); t
 fi
 
 selected="${files[$((choice - 1))]}"
-exec "$SCRIPT_DIR/../jbang" --java 22+ -R--enable-native-access=ALL-UNNAMED --cp "$SCRIPT_DIR/../miniterm-ffm/target/"miniterm-*.jar "$SCRIPT_DIR/${selected}.java"
+exec "$SCRIPT_DIR/../jbang" --java 22+ -R--enable-native-access=ALL-UNNAMED --deps "$DEP" "$SCRIPT_DIR/${selected}.java"
