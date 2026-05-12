@@ -135,7 +135,7 @@ color.toString() // "rgb:RRRR/GGGG/BBBB" — ready for use in OSC sequences
 ### JBang
 
 ```java
-//DEPS org.codejive.miniterm:colors:0.1.3
+//DEPS org.codejive.miniterm:colors:0.1.4
 ```
 
 ### Maven
@@ -144,14 +144,14 @@ color.toString() // "rgb:RRRR/GGGG/BBBB" — ready for use in OSC sequences
 <dependency>
     <groupId>org.codejive.miniterm</groupId>
     <artifactId>colors</artifactId>
-    <version>0.1.3</version>
+    <version>0.1.4</version>
 </dependency>
 ```
 
 ### Gradle
 
 ```kotlin
-implementation("org.codejive.miniterm:colors:0.1.3")
+implementation("org.codejive.miniterm:colors:0.1.4")
 ```
 
 `colors` requires `ansiparser` (included transitively) for parsing OSC responses.
