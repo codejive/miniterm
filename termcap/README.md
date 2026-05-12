@@ -60,12 +60,12 @@ TermCaps caps = TermProber.probe(terminal, () -> terminal.read(500));
 <dependency>
     <groupId>org.codejive.miniterm</groupId>
     <artifactId>termcap</artifactId>
-    <version>VERSION</version>
+    <version>0.1.2</version>
 </dependency>
 <dependency>
     <groupId>org.codejive.miniterm</groupId>
     <artifactId>ansiparser</artifactId>
-    <version>VERSION</version>
+    <version>0.1.2</version>
 </dependency>
 ```
 
@@ -154,7 +154,7 @@ Each query uses a configurable timeout (default 500 ms). On timeout the Layer 1â
 ### JBang
 
 ```java
-//DEPS org.codejive.miniterm:termcap:0.1.1
+//DEPS org.codejive.miniterm:termcap:0.1.2
 ```
 
 ### Maven
@@ -163,14 +163,14 @@ Each query uses a configurable timeout (default 500 ms). On timeout the Layer 1â
 <dependency>
     <groupId>org.codejive.miniterm</groupId>
     <artifactId>termcap</artifactId>
-    <version>0.1.1</version>
+    <version>0.1.2</version>
 </dependency>
 ```
 
 ### Gradle
 
 ```kotlin
-implementation("org.codejive.miniterm:termcap:0.1.1")
+implementation("org.codejive.miniterm:termcap:0.1.2")
 ```
 
 `termcap` has no mandatory runtime dependencies. The `ansiparser` artifact is only needed if you use `TermProber`.

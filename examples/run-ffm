@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-DEP="org.codejive.miniterm:miniterm:0.1.1"
+DEP="org.codejive.miniterm:miniterm:0.1.2"
 if [[ -n "$1" ]]; then
 	DEP="org.codejive.miniterm:miniterm:$1"
 fi

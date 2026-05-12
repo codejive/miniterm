@@ -1,6 +1,6 @@
-//DEPS org.codejive.miniterm:miniterm:0.1.1
-//DEPS org.codejive.miniterm:ansiparser:0.1.1
-//DEPS org.codejive.miniterm:termcap:0.1.2-SNAPSHOT
+//DEPS org.codejive.miniterm:miniterm:0.1.2
+//DEPS org.codejive.miniterm:ansiparser:0.1.2
+//DEPS org.codejive.miniterm:termcap:0.1.2
 
 package examples;
 
