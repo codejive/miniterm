@@ -1,4 +1,4 @@
-//DEPS org.codejive.miniterm:colors:0.1.4
+//DEPS org.codejive.miniterm:colors:0.1.5
 
 package examples;
 

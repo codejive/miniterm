@@ -83,7 +83,7 @@ try (Terminal terminal = Terminal.create()) {
 ### JBang
 
 ```java
-//DEPS org.codejive.miniterm:ansiparser:0.1.4
+//DEPS org.codejive.miniterm:ansiparser:0.1.5
 ```
 
 ### Maven
@@ -92,14 +92,14 @@ try (Terminal terminal = Terminal.create()) {
 <dependency>
     <groupId>org.codejive.miniterm</groupId>
     <artifactId>ansiparser</artifactId>
-    <version>0.1.4</version>
+    <version>0.1.5</version>
 </dependency>
 ```
 
 ### Gradle
 
 ```kotlin
-implementation("org.codejive.miniterm:ansiparser:0.1.4")
+implementation("org.codejive.miniterm:ansiparser:0.1.5")
 ```
 
 ## Building

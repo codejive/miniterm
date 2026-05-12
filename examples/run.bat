@@ -1,7 +1,7 @@
 @echo off
 setlocal enabledelayedexpansion
 
-set "DEP=org.codejive.miniterm:miniterm:0.1.4"
+set "DEP=org.codejive.miniterm:miniterm:0.1.5"
 if not "%~1"=="" set "DEP=org.codejive.miniterm:miniterm:%~1"
 
 set "SCRIPT_DIR=%~dp0"

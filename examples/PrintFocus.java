@@ -1,5 +1,5 @@
-//DEPS org.codejive.miniterm:ansiparser:0.1.4
-//DEPS org.codejive.miniterm:termcap:0.1.4
+//DEPS org.codejive.miniterm:ansiparser:0.1.5
+//DEPS org.codejive.miniterm:termcap:0.1.5
 
 package examples;
 
