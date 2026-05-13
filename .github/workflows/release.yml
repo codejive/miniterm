@@ -49,8 +49,8 @@ jobs:
             -e 's/\(org\.codejive\.miniterm:[^:]*\):[0-9][a-zA-Z0-9._-]*/\1:${{ inputs.version }}/g' \
             -e 's|<version>[^<]*</version>|<version>${{ inputs.version }}</version>|g' \
             {} \;
-          find examples -type f -exec sed -i \
-            -e 's/\(org\.codejive\.miniterm:[^:]*\):[0-9][a-zA-Z0-9._-]*/\1:${{ inputs.version }}/g' \
+          find examples -name "*.java" -exec sed -i \
+            -e 's/\$\{miniterm\.version:[^}]*}/${miniterm.version:${{ inputs.version }}}/g' \
             {} \;
 
       - name: Build and deploy to staging

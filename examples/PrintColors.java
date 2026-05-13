@@ -1,4 +1,6 @@
-//DEPS org.codejive.miniterm:colors:0.1.5
+///usr/bin/env jbang "$0" "$@" ; exit $?
+//DEPS org.codejive.miniterm:miniterm${miniterm.ffm:}:${miniterm.version:0.1.5}
+//DEPS org.codejive.miniterm:colors:${miniterm.version:0.1.5}
 
 package examples;
 

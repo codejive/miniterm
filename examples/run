@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-DEP="org.codejive.miniterm:miniterm:0.1.5"
+PROPS=""
 if [[ -n "$1" ]]; then
-	DEP="org.codejive.miniterm:miniterm:$1"
+	PROPS="$PROPS -Dminiterm.version=$1"
 fi
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -31,4 +31,4 @@ if ! [[ "$choice" =~ ^[0-9]+$ ]] || (( choice < 1 || choice > ${#files[@]} )); t
 fi
 
 selected="${files[$((choice - 1))]}"
-exec "$SCRIPT_DIR/../jbang" --deps "$DEP" "$SCRIPT_DIR/${selected}.java"
+exec "$SCRIPT_DIR/../jbang" $PROPS "$SCRIPT_DIR/${selected}.java"

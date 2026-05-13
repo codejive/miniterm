@@ -1,8 +1,8 @@
 @echo off
 setlocal enabledelayedexpansion
 
-set "DEP=org.codejive.miniterm:miniterm-ffm:0.1.5"
-if not "%~1"=="" set "DEP=org.codejive.miniterm:miniterm-ffm:%~1"
+set "PROPS=-Dminiterm.ffm=-ffm"
+if not "%~1"=="" set "PROPS=%PROPS% -Dminiterm.version=%~1"
 
 set "SCRIPT_DIR=%~dp0"
 
@@ -44,4 +44,4 @@ if %choice% gtr %count% (
 )
 
 set "selected=!file[%choice%]!"
-"%SCRIPT_DIR%..\jbang.cmd" --java 22+ -R--enable-native-access=ALL-UNNAMED --deps "%DEP%" "%SCRIPT_DIR%%selected%.java"
+"%SCRIPT_DIR%..\jbang.cmd" --java 22+ -R--enable-native-access=ALL-UNNAMED %PROPS% "%SCRIPT_DIR%%selected%.java"
