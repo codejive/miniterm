@@ -33,8 +33,8 @@ public final class FfmWindowsTerminal implements Terminal {
     private final MemorySegment inputRecord;
     private final MemorySegment intBuffer;
 
-    private final int savedInputMode;
-    private final int savedOutputMode;
+    private int savedInputMode;
+    private int savedOutputMode;
     private boolean rawModeEnabled;
     private volatile Consumer<Size> resizeHandler;
 
@@ -59,19 +59,6 @@ public final class FfmWindowsTerminal implements Terminal {
         inputRecord = arena.allocate(Kernel32.INPUT_RECORD_LAYOUT);
         intBuffer = arena.allocate(ValueLayout.JAVA_INT);
 
-        // Save original console modes
-        if (Kernel32.getConsoleMode(inputHandle, intBuffer) == 0) {
-            arena.close();
-            throw new RuntimeException("Failed to get input console mode");
-        }
-        savedInputMode = intBuffer.get(ValueLayout.JAVA_INT, 0);
-
-        if (Kernel32.getConsoleMode(outputHandle, intBuffer) == 0) {
-            arena.close();
-            throw new RuntimeException("Failed to get output console mode");
-        }
-        savedOutputMode = intBuffer.get(ValueLayout.JAVA_INT, 0);
-
         rawModeEnabled = false;
     }
 
@@ -80,6 +67,17 @@ public final class FfmWindowsTerminal implements Terminal {
         if (rawModeEnabled) {
             return;
         }
+
+        // Save original console modes
+        if (Kernel32.getConsoleMode(inputHandle, intBuffer) == 0) {
+            throw new RuntimeException("Failed to get input console mode");
+        }
+        savedInputMode = intBuffer.get(ValueLayout.JAVA_INT, 0);
+
+        if (Kernel32.getConsoleMode(outputHandle, intBuffer) == 0) {
+            throw new RuntimeException("Failed to get output console mode");
+        }
+        savedOutputMode = intBuffer.get(ValueLayout.JAVA_INT, 0);
 
         // Set input mode: disable line input, echo, and processed input; enable VT input
         var newInputMode =

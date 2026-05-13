@@ -46,6 +46,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <skipITs>true</skipITs>
 
         <!-- Dependency versions -->
         <version.jspecify>1.0.0</version.jspecify>
@@ -97,6 +98,11 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
+                    <version>3.5.5</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-failsafe-plugin</artifactId>
                     <version>3.5.5</version>
                 </plugin>
                 <plugin>

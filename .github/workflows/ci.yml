@@ -26,3 +26,17 @@ jobs:
 
       - name: Build and verify
         run: ./mvnw --no-transfer-progress --batch-mode verify
+
+      - name: Run IT tests
+        shell: bash
+        run: |
+          MVN="./mvnw --no-transfer-progress --batch-mode verify -DskipITs=false -Dsurefire.skip=true"
+          if [[ "$RUNNER_OS" == "Linux" ]]; then
+            # Allocate a PTY so /dev/tty is available for the Terminal IT tests
+            script -q -e -c "$MVN" /dev/null
+          elif [[ "$RUNNER_OS" == "macOS" ]]; then
+            # BSD script: command args follow the output file
+            script -q /dev/null $MVN
+          else
+            $MVN
+          fi
