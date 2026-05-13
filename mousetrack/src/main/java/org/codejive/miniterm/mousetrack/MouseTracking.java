@@ -165,7 +165,7 @@ public final class MouseTracking {
      *
      * <p>Sends {@code ESC [ ? <n> h} to {@code out}.
      *
-     * @param out the terminal's output (typically the {@code TerminalBase} / {@code Appendable}
+     * @param out the terminal's output (typically the {@code Terminal} / {@code Appendable}
      *     connected to the TTY)
      * @param protocol the tracking protocol to enable
      * @throws IOException if writing to {@code out} fails
