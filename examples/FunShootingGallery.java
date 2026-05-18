@@ -32,18 +32,18 @@ public class FunShootingGallery {
      * Visual lines of the target (5 visible chars wide × 5 lines tall).
      * ANSI colour codes are embedded; only the visible characters count for positioning.
      *
-     *  ...
-     * .###.
-     * .#*#.
-     * .###.
-     *  ...
+     *   .....
+     * ..#####..
+     * ..##*##..
+     * ..#####..
+     *   .....
      */
     private static final String[] TARGET_VISUAL = {
-        " " + CY + "   " + RESET,
-        CY + " " + RD + "   " + CY + " " + RESET,
-        CY + " " + RD + " " + YL + " " + RESET + RD + " " + CY + " " + RESET,
-        CY + " " + RD + "   " + CY + " " + RESET,
-        " " + CY + "   " + RESET
+        "  " + CY + "     " + RESET,
+        CY + "  " + RD + "     " + CY + "  " + RESET,
+        CY + "  " + RD + "  " + YL + " " + RESET + RD + "  " + CY + "  " + RESET,
+        CY + "  " + RD + "     " + CY + "  " + RESET,
+        "  " + CY + "     " + RESET
     };
 
     /**
@@ -54,11 +54,11 @@ public class FunShootingGallery {
      *   '*' = 50 pts
      */
     private static final String[] TARGET_HITBOX = {
-        " ... ",
-        ".###.",
-        ".#*#.",
-        ".###.",
-        " ... "
+        "  .....  ",
+        "..#####..",
+        "..##*##..",
+        "..#####..",
+        "  .....  "
     };
 
     private static final String[] PLAY_BUTTON_VISUAL = {
