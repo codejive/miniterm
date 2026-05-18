@@ -153,6 +153,7 @@ examples\run-ffm.bat
 
 The scripts will list the available examples and let you choose one to run:
 
+- **FunShootingGallery** - simplistic game showing usage of the different APIs
 - **PrintAnsi** — prints the the ANSI sequence of each key pressed
 - **PrintCaps** — prints the capabilities that the terminal supports
 - **PrintColors** — detects and prints the colors that the terminal supports
